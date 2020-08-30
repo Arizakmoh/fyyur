@@ -15,15 +15,6 @@ This app started out with the front end and was only missing one thing… real d
 * searching for venues and artists.
 * learning more about a specific artist or venue.
 
-### Images of Site
-![Main Site](https://thecoderpilot.com/fyyur/mains.png)
-
-![Artist Site](https://thecoderpilot.com/fyyur/artist.png)
-
-![Venue Site](https://thecoderpilot.com/fyyur/venue.png)
-
-![Show Site](https://thecoderpilot.com/fyyur/shows.png)
-
 ### Tech Stack
 
 Our tech stack includes:
@@ -59,25 +50,37 @@ Our tech stack includes:
   ```
 
 Overall:
-* Models are located in `models.py`.
 * Controllers are located in `app.py`.
+* Models are located in `models.py`.
 * The web frontend is located in `templates/`, which builds static assets deployed to the web server at `static/`.
 * Web forms for creating data are located in `form.py`
 
 ### Getting Started
 * Clone this repository.
-* Clone this repo: 
-```git clone git@github.com:clc80/Fyyur.git```
+```git clone https://github.com/Arizakmoh/fyyur.git```
 * Change to the repo directory: ```cd Fyyur```
 * If you want to use virtualenv: ```virtualenv ENV && source ENV/bin/activate```
 * Install dependencies with pip: ```pip install -r requirements.txt```
 * Connect your local database
-  * in app.py ```app.config['SQLALCHEMY_DATABASE_URI'] = '<your database>'```
-  * in config.py ```SQLALCHEMY_DATABASE_URI = '<your database>'```
+  * in config.py ```SQLALCHEMY_DATABASE_URI='<your database>'```
+  * in app.py ```app.config['SQLALCHEMY_DATABASE_URI']='<your database>'```
 * Run the development server:
   ```
-  $ export FLASK_APP=myapp
+  $ export FLASK_APP=myapp # this should be your project Folder (myapp)
   $ export FLASK_ENV=development # enables debug mode
   $ python3 app.py
+
+  * run project in Windows
+
+  C:\Users\Project_Directory> set FLASK_APP=app.py
+  C:\Users\Project_Directory> set FLASK_DEBUG=true
+  C:\Users\Project_Directory> flask run
+
+  * Create a virtual enviroment in Windows -- optional 
+
+  C:\Users\Project_Directory>py -m venv env
+  C:\Users\Project_Directory>env\Scripts\activate
+  (env) C:\Users\ABDIRIZAK>
+
   ```
 * Navigate to Home page [http://localhost:5000](http://localhost:5000)

@@ -1,22 +1,31 @@
 #----------------------------------------------------------------------------#
+#                           Coder info                                       
+#                   ABDIRIZAK MOHAMED ABDULLAHI                              
+#                      Udacity Course Project                                           
+#                            Class 2020
+#                https://www.linkedin.com/in/arizakmoh/
+#                    https://github.com/Arizakmoh/
+#                     +25377145259/+252615591064 
+#                       arizakprime@gmail.com
+#----------------------------------------------------------------------------#
+#----------------------------------------------------------------------------#
 # Imports
 #----------------------------------------------------------------------------#
-
-import json
-import dateutil.parser
-import babel
-import datetime
 from flask import Flask, render_template, request, Response, flash, redirect, url_for
-from flask_moment import Moment
-from flask_sqlalchemy import SQLAlchemy
 from sqlalchemy.dialects.postgresql import ARRAY
-from flask_migrate import Migrate
-import logging
 from logging import Formatter, FileHandler
+from flask_sqlalchemy import SQLAlchemy
+from flask_migrate import Migrate
+from flask_moment import Moment
 from flask_wtf import Form
+import dateutil.parser
+import datetime
+import logging
+import babel
+import json
+import sys
 from forms import *
 
-import sys
 
 #----------------------------------------------------------------------------#
 # App Config.
@@ -28,7 +37,9 @@ app.config.from_object('config')
 db = SQLAlchemy(app)
 migrate = Migrate(app, db)
 db.create_all()
-app.config['SQLALCHEMY_DATABASE_URI'] = 'postgres://clmaciel@localhost:5432/fyyur'
+app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql://postgres:123456@localhost:5432/fyyur'
+app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
+
 #----------------------------------------------------------------------------#
 # Models.
 #----------------------------------------------------------------------------#
@@ -76,6 +87,7 @@ class Show(db.Model):
     artist = db.relationship('Artist', backref=db.backref('shows'))
 
 db.create_all()
+
 #----------------------------------------------------------------------------#
 # Filters.
 #----------------------------------------------------------------------------#
@@ -86,7 +98,7 @@ def format_datetime(value, format='medium'):
       format="EEEE MMMM, d, y 'at' h:mma"
   elif format == 'medium':
       format="EE MM, dd, y h:mma"
-  return babel.dates.format_datetime(date, format)
+  return babel.dates.format_datetime(date, format, locale='en_US')
 
 app.jinja_env.filters['datetime'] = format_datetime
 
@@ -145,7 +157,7 @@ def search_venues():
 
   return render_template('pages/search_venues.html', results=response, search_term=request.form.get('search_term', ''))
 
-#  Show Venue
+# shows the venue page with the given venue_id
 #  ----------------------------------------------------------------
 @app.route('/venues/<int:venue_id>')
 def show_venue(venue_id):
@@ -165,7 +177,6 @@ def show_venue(venue_id):
         }
 
     if (show.start_time < datetime.now()):
-        #print(past_shows, file=sys.stderr)
         past_shows.append(show_add)
     else:
         upcoming_shows.append(show_add)
@@ -226,6 +237,20 @@ def create_venue_submission():
       db.session.close()
   return render_template('pages/home.html')
 
+#  Delete Venue
+#  ----------------------------------------------------------------
+@app.route('/venues/<venue_id>', methods=['DELETE'])
+def delete_venue(venue_id):
+    try:
+        db.session.query(Venue).filter(Venue.id == venue_id).delete()
+        db.session.commit()
+        flash('Venue was successfully deleted!')
+    except:
+        flash('An error occurred. Venue could not be deleted.')
+    finally:
+        db.session.close()
+    return redirect(url_for('venues'))
+
 #  Edit Venue
 #  ----------------------------------------------------------------
 @app.route('/venues/<int:venue_id>/edit', methods=['GET'])
@@ -263,19 +288,6 @@ def edit_venue_submission(venue_id):
         db.session.close()
     return redirect(url_for('show_venue', venue_id=venue_id))
 
-#  Delete Venue
-#  ----------------------------------------------------------------
-@app.route('/venues/<venue_id>', methods=['DELETE'])
-def delete_venue(venue_id):
-    try:
-        db.session.query(Venue).filter(Venue.id == venue_id).delete()
-        db.session.commit()
-        flash('Venue was successfully deleted!')
-    except:
-        flash('An error occurred. Venue could not be deleted.')
-    finally:
-        db.session.close()
-    return redirect(url_for('venues'))
 
 #  Artists
 #  ----------------------------------------------------------------

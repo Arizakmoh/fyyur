@@ -2,7 +2,7 @@
 
 Revision ID: 2133dcb784ee
 Revises: 5f255be9c87e
-Create Date: 2019-09-21 20:05:57.678109
+Create Date: 2020-08-29 18:25:23.554108
 
 """
 from alembic import op
@@ -45,4 +45,4 @@ def downgrade():
     op.add_column('Artist', sa.Column('upcoming_shows_count', sa.INTEGER(), autoincrement=False, nullable=True))
     op.add_column('Artist', sa.Column('past_shows_count', sa.INTEGER(), autoincrement=False, nullable=True))
     op.drop_table('Venue')
-    # ### end Alembic commands ###
+    # ### end Alembic commands ##
